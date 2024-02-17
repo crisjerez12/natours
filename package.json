@@ -1,16 +1,18 @@
 {
-  "name": "natours",
-  "version": "1.0.0",
-  "description": "Learning nodejs by jonas",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Cris Jerez",
-  "license": "MIT",
   "dependencies": {
-    "dotenv": "^16.4.4",
+    "dotenv": "^16.3.2",
     "express": "^4.18.2",
+    "mongoose": "^5.13.22",
     "morgan": "^1.10.0"
-  }
+  },
+  "name": "starter",
+  "version": "1.0.0",
+  "description": "Learning Express",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "start:prod": "NODE_ENV = production nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC"
 }
