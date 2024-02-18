@@ -1,31 +1,23 @@
 const Tour = require('./../models/tourModel');
+const APIFeatures = require('./../utils/apiFeatures');
+exports.aliasTopTours = (req, res, next) => {
+  req.query.limit = '5';
+  req.query.sort = '-ratingsAverage,price';
+  req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
+  next();
+};
 
 exports.getAllTours = async (req, res) => {
   try {
-    console.log(req.query);
-    //1A.)Filtering
-    const queryObj = { ...req.query };
-    const excludedFields = ['page', 'sort', 'limit', 'fields'];
-    excludedFields.forEach((el) => delete queryObj[el]);
-    //removing the speciaL WORDS so that we cant process it in API
-    //1B.)Advanced Filtering
-    let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-    //l is for or so that i can mutate the querySTr to make a query in mongoDB
-    //b is for exact letter
-    //g is for all/ global
-    let query = Tour.find(JSON.parse(queryStr));
+    // EXECUTE QUERY
 
-    //2.Sorting
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(',').join(' ');
-      // creating a chains of sort so that it can combine the sorting
-      query = query.sort(sortBy);
-    } else {
-      query = query.sort('-createdAt');
-      //if by default by date
-    }
-    const tours = await query;
+    const features = new APIFeatures(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .pagination();
+
+    const tours = await features.query;
     res.status(200).json({
       status: 'success',
       results: tours.length,
