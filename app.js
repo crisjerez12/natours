@@ -10,10 +10,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
-app.use((req, res, next) => {
-  console.log('hello from the Middleware');
-  next();
-});
 
 app.use((req, res, next) => {
   req.requesTime = new Date().toISOString();
@@ -22,4 +18,10 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+app.use('*', (req, res, next) => {
+  res.status(404).json({
+    status: 'Fail',
+    message: 'No URL exist ',
+  });
+});
 module.exports = app;
